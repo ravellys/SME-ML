@@ -177,5 +177,8 @@ plt.ylim(.0, .6)
 plt.legend(loc='upper left')
 plt.show()
 ```
+### Out
+<img scr = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/Eta.png">
+<img src = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th2.png">
 
-<img scr = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/ETa.png">
+
