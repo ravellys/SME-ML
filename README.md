@@ -42,10 +42,11 @@ ax = sns.heatmap(corr, vmin=-1, vmax=1, center=0, cmap=sns.diverging_palette(20,
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45,horizontalalignment='right')
 plt.show()
 ```
-### out:
+### Out:
 <img src = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/heatmap.png">
 
-## Initial soil moistures
+# Estimating soil moisture
+## Initial soil moisture
 
 ```
 tho = dados_medidos[["th1","th2","th3","th4"]][init:init+1].values
@@ -87,7 +88,7 @@ gp.fit(x_train2, y_train)
 
 # Make the prediction 
 
-## This loop the values are estimated with the initial moisture with interactive method were Th[i+1] is calculeted with TH[i]
+This loop the values are estimated with the initial moisture with interactive method were Th[i+1] is calculeted with TH[i]
 
 ```
 TH = tho.tolist()
@@ -115,5 +116,66 @@ for i in range(len(TH[0])):
     plt.legend(loc='upper left')
     plt.show()
 ```
+### Out:
+<img src = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th1.png">
+<img src = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th2.png">
+<img src = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th2.png">
+<img src = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th2.png">
 
+# Estimating Actual Evapotranspiration
 
+The ETa is the major water flux in hydrologycal cicle. The of ETa can be obtained by the Eddy Covariance method (EC), however, this method is so expensive. This code show a new approach to estimate the ETa by Machine Learning. We train the model with soil moisture, rainfall and potential Evapotranspiration data (calculated by Pean-Monteith).
+
+## initial actual evapotranspiration
+
+```
+eta_o = dados_medidos[["Et"]][init:init+1].values
+```
+## create the Target values with soil moisture data in time (i) 
+
+```
+y_eta = np.atleast_2d(dados_medidos[["Et"]].values[init+1:])
+```
+
+## separete train and test data to input in model
+
+```
+x_train, x_test, y_train_eta, y_test_eta = train_test_split(x_, y_eta,test_size=0.5,shuffle = False)
+x_train2 = x_train[:,:-1]
+```
+## Instantiate a Gaussian Process and train model
+
+```
+kernel = 1.0 * RBF([.1,.1,.5,.5,.5,.1],(.1,2)) + WhiteKernel(noise_level=1, noise_level_bounds=(1e-5, 1e5))
+gp_eta = GaussianProcessRegressor(alpha=1e-6, kernel=kernel, n_restarts_optimizer=10, normalize_y=True,optimizer='fmin_l_bfgs_b')
+gp_eta.fit(x_train2, y_train_eta)
+```
+## Make the prediction
+
+```
+ETa = eta_o.tolist()[0]
+for i in range(len(y_)):
+    ETa.append(gp_eta.predict(np.atleast_2d((np.concatenate((TH[i],[cP[i+1]],[ETo[i+1]])))))[0,0])
+ETa= np.array(ETa)
+```
+
+## Plot
+
+```
+plt.plot(x_train[:,len(x_test[1,:])-1], y_train_eta,'o',c = 'green',markersize=2, markerfacecolor="None", label='train')
+plt.plot(x_test[:,len(x_test[1,:])-1], y_test_eta, 'o',c='red',markersize=2, markerfacecolor="None", label='test')
+plt.plot(dias, ETa, 'gray', label=r'$ ETa simulado$')
+  
+NSEtest = he.nse(ETa[int(x_test[:,len(x_test[1,:])-1][0]-init-1):],y_test_eta[:,0])   
+plt.text(270, .5, r"$NSE_{test}: %.3f $" %NSEtest, fontsize=12)
+NSEtrain = he.nse(ETa[1:int(x_test[:,len(x_test[1,:])-1][0]-init-1)],y_train_eta[:,0])
+plt.text(270, .55, r"$NSE_{train}: %.3f $" %NSEtrain, fontsize=12)
+
+plt.xlabel('$dias$')
+plt.ylabel(r'$ ETa (cm.d^{-1})$')
+plt.ylim(.0, .6)
+plt.legend(loc='upper left')
+plt.show()
+```
+
+<img scr = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/ETa.png">
