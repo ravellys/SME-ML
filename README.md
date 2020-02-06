@@ -25,7 +25,7 @@ Localization towers area:
 - from sklearn.model_selection import train_test_split
 - import hydroeval as he
 
-### import mensured data
+## Import mensured data
 ```
 dados_medidos = pd.read_csv("Dados_medidos .csv", header = 0, sep = ";")
 dias = dados_medidos["dia"].values[init:]
@@ -33,7 +33,7 @@ cP= dados_medidos[cumulated_P].values
 ETo = dados_medidos["Eto"].values
 ```
 
-### Plot of the correlate heatmap meansured data
+## Plot of the correlate heatmap meansured data
 ```
 data = dados_medidos[["th1","th2","th3","th4","Et","P","Eto"]]
 corr = data.corr()
@@ -41,7 +41,20 @@ ax = sns.heatmap(corr, vmin=-1, vmax=1, center=0, cmap=sns.diverging_palette(20,
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45,horizontalalignment='right')
 plt.show()
 ```
+### out:
+<img src = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/heatmap.png">
 
-
+## Initial soil moistures
+```
+tho = dados_medidos[["th1","th2","th3","th4"]][init:init+1].values
+```
+## Create features matrix. Note that features matrix has soil moisture data in time (i-1), and the cP data in time (i) 
+```
+x_ = dados_medidos[["th1","th2","th3","th4"]][init:-1]
+x_[cumulated_P]= dados_medidos[[cumulated_P]][init+1:].values
+x_["Eto"]= dados_medidos[["Eto"]][init+1:].values
+x_["dia"] = dados_medidos[["dia"]][init+1:].values
+x_=np.atleast_2d(x_.values)
+```
 
 
