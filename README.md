@@ -33,4 +33,15 @@ cP= dados_medidos[cumulated_P].values
 ETo = dados_medidos["Eto"].values
 ```
 
+### Plot of the correlate heatmap meansured data
+```
+data = dados_medidos[["th1","th2","th3","th4","Et","P","Eto"]]
+corr = data.corr()
+ax = sns.heatmap(corr, vmin=-1, vmax=1, center=0, cmap=sns.diverging_palette(20, 220, n=200),square=True)
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45,horizontalalignment='right')
+plt.show()
+```
+
+
+
 
