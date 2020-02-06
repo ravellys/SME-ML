@@ -1,6 +1,7 @@
 # Estimating Soil Moisture and Actual Evapotranspiration with Machine Learning
 
-Routine to estime the soil water content by GaussianProcessRegressor in Caatinga area. We train the model with data of the soil moisture, the precipitation, and the potencial evapotranspiration. The data is simulated with the initial conditions of the soil moisture, and the contour conditions of rainfall and potential evapotranspiration. The data used in this work was provided by the project INCT-ONDACBC (Observatório Nacional da Dinâmica da Água e de Carbono no Bioma Caatinga).The soil moisture was evalueted by TDR sensors in depth of 10, 20, 30, and 40 cm. This tower is located in a seasonal tropical dry forest (Caatinga) in the semi-arid region of Brazil (Serra Talhada - PE) (http://dx.doi.org/10.17190/AMF/1562386).
+Routine to estime the soil water content by GaussianProcessRegressor in Caatinga area. We train the model with data of the soil moisture, the precipitation, and the potencial evapotranspiration. The data is simulated with the initial conditions of the soil moisture, and the contour conditions of rainfall and potential evapotranspiration. The data used in this work was provided by the project INCT-ONDACBC (Observatório Nacional da Dinâmica da Água e de Carbono no Bioma Caatinga). The soil moisture was evalueted by TDR sensors in depth of 10, 20, 30, and 40 cm. This tower is located in a seasonal tropical dry forest (Caatinga) in the semi-arid region of Brazil (Serra Talhada - PE) (http://dx.doi.org/10.17190/AMF/1562386).
+
 
 Localization towers area:
 <img src = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/localiza%C3%A7%C3%A3o.png">
@@ -114,3 +115,5 @@ for i in range(len(TH[0])):
     plt.legend(loc='upper left')
     plt.show()
 ```
+
+
