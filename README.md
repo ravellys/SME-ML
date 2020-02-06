@@ -178,8 +178,7 @@ plt.legend(loc='upper left')
 plt.show()
 ```
 ### Out:
-
-< img scr = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/Eta.png">
+<img scr = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/Eta.png">
 
 
 
