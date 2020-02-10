@@ -117,8 +117,8 @@ for i in range(len(TH[0])):
     plt.show()
 ```
 ### Out:
-|<img src = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th1.png">|<img src = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th2.png">|
-|<img src = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th3.png">|<img src = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th4.png">|
+<img src = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th1.png"><img src = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th2.png">
+<img src = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th3.png"><img src = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th4.png">
 
 # Estimating Actual Evapotranspiration
 
@@ -178,7 +178,7 @@ plt.show()
 
 ### Out:
 
-<img scr = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/ETa.png">
+<img src = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/Eta.png">
 
 
 
