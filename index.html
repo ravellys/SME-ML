@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Soil-moisture-estimator-with-machine-learn by ravellys</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Soil-moisture-estimator-with-machine-learn</h1>
+      <h2 class="project-tagline">Code to estime theSoil Water Content and Actual Evapotranspiration by GaussianProcessRegressor in Caatinga area.</h2>
+      <a href="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn" class="btn">View on GitHub</a>
+      <a href="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="estimating-soil-moisture-and-actual-evapotranspiration-with-machine-learning" class="anchor" href="#estimating-soil-moisture-and-actual-evapotranspiration-with-machine-learning" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Estimating Soil Moisture and Actual Evapotranspiration with Machine Learning</h1>
+<p>Routine to estimate the soil water content by GaussianProcessRegressor in a Caatinga area. We trained the model with data of soil moisture, precipitation, and potential evapotranspiration provided by a flux tower installed and controlled by the INCT-ONDACBC (Instituto Nacional de Ciência e Tecnologia - Observatório Nacional da Dinâmica da Água e de Carbono no Bioma Caatinga). This tower is in a seasonal tropical dry forest (Caatinga) in the semi-arid region of Brazil (Serra Talhada - PE). For the simulation, the soil moisture, which was evaluated by TDR sensors for depths of 10, 20, 30, and 40 cm, is used as the initial condition, while precipitation and potential evapotranspiration are boundary conditions.  (<a href="http://dx.doi.org/10.17190/AMF/1562386">http://dx.doi.org/10.17190/AMF/1562386</a>).</p>
+<p>Localization towers area:
+<img src="localiza%C3%A7%C3%A3o.png"></p>
+<h2>
+<a id="variables" class="anchor" href="#variables" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Variables:</h2>
+<ol>
+<li>dias = day</li>
+<li>cP = Precipitation</li>
+<li>ETo = potential Evapotranpiration</li>
+<li>ETa = actual Evapotranspiration</li>
+<li>tho = initial soil moisture</li>
+<li>x_ = features</li>
+<li>y_ = Target values</li>
+<li>TH = soil moisture estimated</li>
+</ol>
+<h2>
+<a id="initialy-we-are-import-the-follows-packages" class="anchor" href="#initialy-we-are-import-the-follows-packages" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Initialy, we are import the follows packages:</h2>
+<ul>
+<li>import numpy as np</li>
+<li>from matplotlib import pyplot as plt</li>
+<li>import seaborn as sns</li>
+<li>import pandas as pd</li>
+<li>from sklearn.gaussian_process import GaussianProcessRegressor</li>
+<li>from sklearn.gaussian_process.kernels import RBF, WhiteKernel</li>
+<li>from sklearn.model_selection import train_test_split</li>
+<li>import hydroeval as he</li>
+</ul>
+<h2>
+<a id="import-mensured-data" class="anchor" href="#import-mensured-data" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Import mensured data</h2>
+<pre><code>dados_medidos = pd.read_csv("Dados_medidos .csv", header = 0, sep = ";")
+dias = dados_medidos["dia"].values[init:]
+cP= dados_medidos[cumulated_P].values
+ETo = dados_medidos["Eto"].values
+</code></pre>
+<h2>
+<a id="plot-of-the-correlate-heatmap-meansured-data" class="anchor" href="#plot-of-the-correlate-heatmap-meansured-data" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Plot of the correlate heatmap meansured data</h2>
+<pre><code>data = dados_medidos[["th1","th2","th3","th4","Et","P","Eto"]]
+corr = data.corr()
+ax = sns.heatmap(corr, vmin=-1, vmax=1, center=0, cmap=sns.diverging_palette(20, 220, n=200),square=True)
+ax.set_xticklabels(ax.get_xticklabels(), rotation=45,horizontalalignment='right')
+plt.show()
+</code></pre>
+<h3>
+<a id="out" class="anchor" href="#out" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Out:</h3>
+<img src="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/heatmap.png">
+<h1>
+<a id="estimating-soil-moisture" class="anchor" href="#estimating-soil-moisture" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Estimating soil moisture</h1>
+<h2>
+<a id="initial-soil-moisture" class="anchor" href="#initial-soil-moisture" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Initial soil moisture</h2>
+<pre><code>tho = dados_medidos[["th1","th2","th3","th4"]][init:init+1].values
+</code></pre>
+<h2>
+<a id="create-features-matrix-note-that-features-matrix-has-soil-moisture-data-in-time-i-1-and-the-cp-data-in-time-i" class="anchor" href="#create-features-matrix-note-that-features-matrix-has-soil-moisture-data-in-time-i-1-and-the-cp-data-in-time-i" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Create features matrix. Note that features matrix has soil moisture data in time (i-1), and the cP data in time (i)</h2>
+<pre><code>x_ = dados_medidos[["th1","th2","th3","th4"]][init:-1]
+x_[cumulated_P]= dados_medidos[[cumulated_P]][init+1:].values
+x_["Eto"]= dados_medidos[["Eto"]][init+1:].values
+x_["dia"] = dados_medidos[["dia"]][init+1:].values
+x_=np.atleast_2d(x_.values)
+</code></pre>
+<h2>
+<a id="create-the-target-values-with-soil-moisture-data-in-time-i" class="anchor" href="#create-the-target-values-with-soil-moisture-data-in-time-i" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Create the Target values with soil moisture data in time (i)</h2>
+<pre><code>y_ = np.atleast_2d(dados_medidos[["th1","th2","th3","th4"]].values[init+1:])
+</code></pre>
+<h2>
+<a id="instantiate-a-gaussian-process-model" class="anchor" href="#instantiate-a-gaussian-process-model" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Instantiate a Gaussian Process model</h2>
+<pre><code>kernel = 1.0 * RBF([.1,.1,.5,.5,.5,.1],(.1,5)) + WhiteKernel(noise_level=1, noise_level_bounds=(1e-5, 1e-3))
+gp = GaussianProcessRegressor(alpha=1e-4, kernel=kernel, n_restarts_optimizer=10, normalize_y=True,                          optimizer='fmin_l_bfgs_b')
+</code></pre>
+<h2>
+<a id="separete-train-and-test-data-to-input-in-model" class="anchor" href="#separete-train-and-test-data-to-input-in-model" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Separete train and test data to input in model</h2>
+<pre><code>x_train, x_test, y_train, y_test = train_test_split(x_, y_, test_size=0.5, shuffle = False)
+</code></pre>
+<h2>
+<a id="fit-to-data-using-maximum-likelihood-estimation-of-the-parameters" class="anchor" href="#fit-to-data-using-maximum-likelihood-estimation-of-the-parameters" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Fit to data using Maximum Likelihood Estimation of the parameters</h2>
+<pre><code>x_train2 = x_train[:,:-1]
+gp.fit(x_train2, y_train)
+</code></pre>
+<h1>
+<a id="make-the-prediction" class="anchor" href="#make-the-prediction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Make the prediction</h1>
+<p>This loop the values are estimated with the initial moisture with interactive method were Th[i+1] is calculeted with TH[i]</p>
+<pre><code>TH = tho.tolist()
+for i in range(len(y_)):
+    TH.append(gp.predict(np.atleast_2d(np.concatenate((TH[i],cP[i+init+1],ETo[i+init+1]), axis=None)))[0])
+TH = np.array(TH)
+</code></pre>
+<h1>
+<a id="plot-the-mensured-data-and-simulated-data" class="anchor" href="#plot-the-mensured-data-and-simulated-data" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Plot the mensured data and simulated data</h1>
+<pre><code>for i in range(len(TH[0])):
+    plt.plot(x_train[:,len(x_test[1,:])-1], y_train[:,i],'o',c = 'green',markersize=2, markerfacecolor="None", label='train')
+    plt.plot(x_test[:,len(x_test[1,:])-1], y_test[:,i], 'o',c='red',markersize=2, markerfacecolor="None", label='test')
+    
+    plt.plot(dias, TH[:,i], 'gray', label=r'$Simulado \theta\ %d$'%(i+1))
+    
+    NSEtest = he.nse(TH[int(x_test[:,len(x_test[1,:])-1][0]-init-1):,i],y_test[:,i])   
+    plt.text(260, .21, r"$NSE_{test}: %.3f $" %NSEtest, fontsize=12)
+    
+    NSEtrain = he.nse(TH[1:int(x_test[:,len(x_test[1,:])-1][0]-init-1),i],y_train[:,i])
+    plt.text(260, .23, r"$NSE_{train}: %.3f $" %NSEtrain, fontsize=12)
+
+    plt.xlabel('$dias$')
+    plt.ylabel(r'$ \theta\ (cm³.cm^{-3})$')
+    plt.ylim(.01, .25)
+    plt.legend(loc='upper left')
+    plt.show()
+</code></pre>
+<h3>
+<a id="out-1" class="anchor" href="#out-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Out:</h3>
+<p><img src="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th1.png"><img src="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th2.png">
+<img src="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th3.png"><img src="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th4.png"></p>
+<h1>
+<a id="estimating-actual-evapotranspiration" class="anchor" href="#estimating-actual-evapotranspiration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Estimating Actual Evapotranspiration</h1>
+<p>The ETa is the major water flux in the hydrological cycle and it can be obtained by the Eddy Covariance method (EC). However, this is an expensive method. Therefore, this code shows a new approach to estimate the ETa by Machine Learning. We trained the model with soil moisture, rainfall and potential Evapotranspiration data (calculated by Pean-Monteith).</p>
+<h2>
+<a id="initial-actual-evapotranspiration" class="anchor" href="#initial-actual-evapotranspiration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>initial actual evapotranspiration</h2>
+<pre><code>eta_o = dados_medidos[["Et"]][init:init+1].values
+</code></pre>
+<h2>
+<a id="create-the-target-values-with-soil-moisture-data-in-time-i-1" class="anchor" href="#create-the-target-values-with-soil-moisture-data-in-time-i-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>create the Target values with soil moisture data in time (i)</h2>
+<pre><code>y_eta = np.atleast_2d(dados_medidos[["Et"]].values[init+1:])
+</code></pre>
+<h2>
+<a id="separete-train-and-test-data-to-input-in-model-1" class="anchor" href="#separete-train-and-test-data-to-input-in-model-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>separete train and test data to input in model</h2>
+<pre><code>x_train, x_test, y_train_eta, y_test_eta = train_test_split(x_, y_eta,test_size=0.5,shuffle = False)
+x_train2 = x_train[:,:-1]
+</code></pre>
+<h2>
+<a id="instantiate-a-gaussian-process-and-train-model" class="anchor" href="#instantiate-a-gaussian-process-and-train-model" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Instantiate a Gaussian Process and train model</h2>
+<pre><code>kernel = 1.0 * RBF([.1,.1,.5,.5,.5,.1],(.1,2)) + WhiteKernel(noise_level=1, noise_level_bounds=(1e-5, 1e5))
+gp_eta = GaussianProcessRegressor(alpha=1e-6, kernel=kernel, n_restarts_optimizer=10, normalize_y=True,optimizer='fmin_l_bfgs_b')
+gp_eta.fit(x_train2, y_train_eta)
+</code></pre>
+<h2>
+<a id="make-the-prediction-1" class="anchor" href="#make-the-prediction-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Make the prediction</h2>
+<pre><code>ETa = eta_o.tolist()[0]
+for i in range(len(y_)):
+    ETa.append(gp_eta.predict(np.atleast_2d((np.concatenate((TH[i],[cP[i+1]],[ETo[i+1]])))))[0,0])
+ETa= np.array(ETa)
+</code></pre>
+<h2>
+<a id="plot" class="anchor" href="#plot" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Plot</h2>
+<pre><code>plt.plot(x_train[:,len(x_test[1,:])-1], y_train_eta,'o',c = 'green',markersize=2, markerfacecolor="None", label='train')
+plt.plot(x_test[:,len(x_test[1,:])-1], y_test_eta, 'o',c='red',markersize=2, markerfacecolor="None", label='test')
+plt.plot(dias, ETa, 'gray', label=r'$ ETa simulado$')
+  
+NSEtest = he.nse(ETa[int(x_test[:,len(x_test[1,:])-1][0]-init-1):],y_test_eta[:,0])   
+plt.text(270, .5, r"$NSE_{test}: %.3f $" %NSEtest, fontsize=12)
+NSEtrain = he.nse(ETa[1:int(x_test[:,len(x_test[1,:])-1][0]-init-1)],y_train_eta[:,0])
+plt.text(270, .55, r"$NSE_{train}: %.3f $" %NSEtrain, fontsize=12)
+
+plt.xlabel('$dias$')
+plt.ylabel(r'$ ETa (cm.d^{-1})$')
+plt.ylim(.0, .6)
+plt.legend(loc='upper left')
+plt.show()
+</code></pre>
+<h3>
+<a id="out-2" class="anchor" href="#out-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Out:</h3>
+<img src="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/Eta.png">
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn">Soil-moisture-estimator-with-machine-learn</a> is maintained by <a href="https://github.com/ravellys">ravellys</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
