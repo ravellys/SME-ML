@@ -3,7 +3,7 @@
 Routine to estimate the soil water content by GaussianProcessRegressor in a Caatinga area. We trained the model with data of soil moisture, precipitation, and potential evapotranspiration provided by a flux tower installed and controlled by the INCT-ONDACBC (Instituto Nacional de Ciência e Tecnologia - Observatório Nacional da Dinâmica da Água e de Carbono no Bioma Caatinga). This tower is in a seasonal tropical dry forest (Caatinga) in the semi-arid region of Brazil (Serra Talhada - PE). For the simulation, the soil moisture, which was evaluated by TDR sensors for depths of 10, 20, 30, and 40 cm, is used as the initial condition, while precipitation and potential evapotranspiration are boundary conditions.  (http://dx.doi.org/10.17190/AMF/1562386).
 
 Localization towers area:
-<img src = "https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/localiza%C3%A7%C3%A3o.png">
+<img src = "localiza%C3%A7%C3%A3o.png">
 
 ## Variables:
 1. dias = day
