@@ -1,30 +1,48 @@
-<!DOCTYPE html>
-<html lang="en-us">
+<!doctype html>
+<html>
   <head>
-    <meta charset="UTF-8">
-    <title>Soil moisture estimator with machine learning by ravellys</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Soil moisture estimator with Machine Learning by ravellys</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
   </head>
   <body>
-    <section class="page-header">
-      <h1 class="project-name">Soil moisture estimator with machine learning</h1>
-      <h2 class="project-tagline">Code to estime theSoil Water Content and Actual Evapotranspiration by GaussianProcessRegressor in Caatinga area.</h2>
-      <a href="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn" class="btn">View on GitHub</a>
-      <a href="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/ravellys/SME-ML">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/ravellys/SME-ML/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/ravellys/SME-ML/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
 
-    <section class="main-content">
-      <h1>
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Soil moisture estimator with Machine Learning</h1>
+          <p>Code to estime theSoil Water Content and Actual Evapotranspiration by GaussianProcessRegressor in Caatinga area.</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/ravellys">ravellys</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
 <a id="estimating-soil-moisture-and-actual-evapotranspiration-with-machine-learning" class="anchor" href="#estimating-soil-moisture-and-actual-evapotranspiration-with-machine-learning" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Estimating Soil Moisture and Actual Evapotranspiration with Machine Learning</h1>
 <p>Routine to estimate the soil water content by GaussianProcessRegressor in a Caatinga area. We trained the model with data of soil moisture, precipitation, and potential evapotranspiration provided by a flux tower installed and controlled by the INCT-ONDACBC (Instituto Nacional de Ciência e Tecnologia - Observatório Nacional da Dinâmica da Água e de Carbono no Bioma Caatinga). This tower is in a seasonal tropical dry forest (Caatinga) in the semi-arid region of Brazil (Serra Talhada - PE). For the simulation, the soil moisture, which was evaluated by TDR sensors for depths of 10, 20, 30, and 40 cm, is used as the initial condition, while precipitation and potential evapotranspiration are boundary conditions.  (<a href="http://dx.doi.org/10.17190/AMF/1562386">http://dx.doi.org/10.17190/AMF/1562386</a>).</p>
-<p>Localization towers area:</p>
-<img src="localização.png">
-
+<p>Localization towers area:
+<img src="localiza%C3%A7%C3%A3o.png"></p>
 <h2>
 <a id="variables" class="anchor" href="#variables" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Variables:</h2>
 <ol>
@@ -66,7 +84,7 @@ plt.show()
 </code></pre>
 <h3>
 <a id="out" class="anchor" href="#out" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Out:</h3>
-<img src="heatmap.png">
+<img src="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/heatmap.png">
 <h1>
 <a id="estimating-soil-moisture" class="anchor" href="#estimating-soil-moisture" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Estimating soil moisture</h1>
 <h2>
@@ -129,8 +147,8 @@ TH = np.array(TH)
 </code></pre>
 <h3>
 <a id="out-1" class="anchor" href="#out-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Out:</h3>
-<p><img src="th1.png"><img src="th2.png">
-<img src="th3.png"><img src="th4.png"></p>
+<p><img src="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th1.png"><img src="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th2.png">
+<img src="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th3.png"><img src="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/th4.png"></p>
 <h1>
 <a id="estimating-actual-evapotranspiration" class="anchor" href="#estimating-actual-evapotranspiration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Estimating Actual Evapotranspiration</h1>
 <p>The ETa is the major water flux in the hydrological cycle and it can be obtained by the Eddy Covariance method (EC). However, this is an expensive method. Therefore, this code shows a new approach to estimate the ETa by Machine Learning. We trained the model with soil moisture, rainfall and potential Evapotranspiration data (calculated by Pean-Monteith).</p>
@@ -179,16 +197,11 @@ plt.show()
 </code></pre>
 <h3>
 <a id="out-2" class="anchor" href="#out-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Out:</h3>
-<img src="Eta.png">
+<img src="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn/blob/master/Eta.png">
+      </section>
 
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/ravellys/Soil-Moisture-estimator-with-Machine-Learn">Soil-moisture-estimator-with-machine-learn</a> is maintained by <a href="https://github.com/ravellys">ravellys</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
-
-    </section>
-
-  
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
   </body>
 </html>
